@@ -1,9 +1,11 @@
 package com.shanepaulus.api;
 
+import com.shanepaulus.mapper.UserDtoMapper;
 import com.shanepaulus.model.UserDto;
 import com.shanepaulus.service.UserService;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,11 +27,13 @@ public class UserController {
 
   @GetMapping
   public ResponseEntity<List<UserDto>> getAll() {
-    return null;
+    return new ResponseEntity<>(UserDtoMapper.INSTANCE.fromUserList(userService.findAll()),
+        HttpStatus.OK);
   }
 
   @GetMapping("/{id}")
   public ResponseEntity<UserDto> get(@PathVariable("id") Integer id) {
-    return null;
+    return new ResponseEntity<>(UserDtoMapper.INSTANCE.mapFromUser(userService.findById(id)),
+        HttpStatus.OK);
   }
 }

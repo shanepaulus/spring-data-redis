@@ -1,6 +1,6 @@
 package com.shanepaulus.service;
 
-import com.shanepaulus.model.UserDto;
+import com.shanepaulus.domain.User;
 import java.util.List;
 
 /**
@@ -11,6 +11,7 @@ import java.util.List;
 
 public interface UserService {
 
-  List<UserDto> findAll();
+  List<User> findAll();
 
+  User findById(Integer id);
 }
