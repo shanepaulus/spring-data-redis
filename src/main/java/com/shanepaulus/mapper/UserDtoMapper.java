@@ -2,6 +2,7 @@ package com.shanepaulus.mapper;
 
 import com.shanepaulus.domain.User;
 import com.shanepaulus.model.UserDto;
+import com.shanepaulus.model.UserRequest;
 import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -20,4 +21,7 @@ public interface UserDtoMapper {
   List<UserDto> fromUserList(List<User> users);
 
   UserDto mapFromUser(User user);
+
+  UserDto mapFromRequest(UserRequest userRequest);
+
 }

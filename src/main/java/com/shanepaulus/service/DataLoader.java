@@ -36,10 +36,6 @@ public class DataLoader {
     userList.add(new User(null, "Joseph", "Knight", ""));
     userList.add(new User(null, "Johnny", "Copper", "Coop"));
     userList.forEach(userRepo::save);
-
-    JedisPool jedisPool = new JedisPool("localhost", 6379);
-    Jedis jedis = jedisPool.getResource();
-    jedis.set("test", "something!");
   }
 
 

@@ -2,6 +2,7 @@ package com.shanepaulus.api;
 
 import com.shanepaulus.mapper.UserDtoMapper;
 import com.shanepaulus.model.UserDto;
+import com.shanepaulus.model.UserRequest;
 import com.shanepaulus.service.UserService;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,4 +40,17 @@ public class UserController {
     return new ResponseEntity<>(UserDtoMapper.INSTANCE.mapFromUser(userService.findById(id)),
         HttpStatus.OK);
   }
+
+  @PostMapping
+  public ResponseEntity<UserDto> save(@RequestBody UserRequest request) {
+    UserDto userDto = UserDtoMapper.INSTANCE.mapFromRequest(request);
+    userDto = UserDtoMapper.INSTANCE.mapFromUser(userService.save(userDto));
+    return new ResponseEntity<>(userDto, HttpStatus.CREATED);
+  }
+
+//  @PutMapping("/{id}")
+//  public ResponseEntity<UserDto> update(@RequestBody UserRequest request) {
+//    UserDto userDto = UserDtoMapper.INSTANCE.mapFromRequest(request);
+//    user
+//  }
 }
