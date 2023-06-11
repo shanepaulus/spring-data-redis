@@ -24,20 +24,16 @@ public class RedisConfig {
 
   @Bean
   public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
-    RedisCacheWriter cacheWriter = RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory);
+    RedisCacheWriter cacheWriter = RedisCacheWriter
+        .nonLockingRedisCacheWriter(redisConnectionFactory);
     RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
-        .serializeValuesWith(
-            SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
-    // Set different TTL values for different cache names
+        .serializeValuesWith(SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
+
     Map<String, RedisCacheConfiguration> cacheConfigurations = new HashMap<>();
     cacheConfigurations.put("users", redisCacheConfiguration.entryTtl(Duration.ofSeconds(30)));
-//    cacheConfigurations.put("products", redisCacheConfiguration.entryTtl(Duration.ofHours(1)));
-//    cacheConfigurations.put("otherCache", redisCacheConfiguration.entryTtl(Duration.ofSeconds(30)));
 
     return RedisCacheManager.builder(redisConnectionFactory)
-        .withInitialCacheConfigurations(cacheConfigurations)
-        .cacheWriter(cacheWriter)
-        .transactionAware()
-        .build();
+        .withInitialCacheConfigurations(cacheConfigurations).cacheWriter(cacheWriter)
+        .transactionAware().build();
   }
 }

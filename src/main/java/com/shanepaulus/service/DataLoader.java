@@ -2,16 +2,15 @@ package com.shanepaulus.service;
 
 import com.shanepaulus.domain.User;
 import com.shanepaulus.repo.UserRepo;
-import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Profile;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 
 /**
  * @author Shane Paulus
@@ -27,7 +26,7 @@ public class DataLoader {
 
   private final UserRepo userRepo;
 
-  @PostConstruct
+  @EventListener(ApplicationReadyEvent.class)
   public void init() {
     log.info("About to load data into the DB....");
 
@@ -41,6 +40,7 @@ public class DataLoader {
 
   @PreDestroy
   public void beforeShutdown() {
+    log.info("About to delete all data....");
     userRepo.deleteAll();
   }
 }
