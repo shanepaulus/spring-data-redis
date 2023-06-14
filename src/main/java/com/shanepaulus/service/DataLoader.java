@@ -2,15 +2,15 @@ package com.shanepaulus.service;
 
 import com.shanepaulus.domain.User;
 import com.shanepaulus.repo.UserRepo;
-import jakarta.annotation.PreDestroy;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+
+import java.util.Random;
+import java.util.concurrent.ForkJoinPool;
 
 /**
  * @author Shane Paulus
@@ -24,23 +24,51 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class DataLoader {
 
-  private final UserRepo userRepo;
+    private static final String[] NAMES = {
+            "Alice", "Bob", "Charlie", "David", "Eve", "Frank", "Grace", "Henry", "Ivy", "Jack", "Kate", "Leo", "Mia",
+            "Noah", "Olivia", "Peter", "Quinn", "Ryan", "Sophia", "Thomas", "Uma", "Victor", "Wendy", "Xavier", "Yara", "Zoe"
+    };
 
-  @EventListener(ApplicationReadyEvent.class)
-  public void init() {
-    log.info("About to load data into the DB....");
+    private static final String[] SURNAMES = {
+            "Smith", "Johnson", "Williams", "Brown", "Jones", "Miller", "Davis", "Garcia", "Rodriguez", "Wilson"
+    };
 
-    List<User> userList = new ArrayList<>();
-    userList.add(new User(null, "Shane", "Paulus", "Paulie"));
-    userList.add(new User(null, "Joseph", "Knight", ""));
-    userList.add(new User(null, "Johnny", "Copper", "Coop"));
-    userList.forEach(userRepo::save);
-  }
+    private static final String[] NICKNAMES = {
+            "Awesome", "Cool", "Fantastic", "Great", "Incredible", "Magical", "Super", "Wonderful"
+    };
 
+    private final UserRepo userRepo;
+    private final ForkJoinPool dataLoaderTreadPool;
 
-  @PreDestroy
-  public void beforeShutdown() {
-    log.info("About to delete all data....");
-    userRepo.deleteAll();
-  }
+    @EventListener(ApplicationReadyEvent.class)
+    public void init() {
+        log.info("About to load data into the DB....");
+
+        for (int index = 0; index < dataLoaderTreadPool.getParallelism(); index++) {
+            dataLoaderTreadPool.execute(this::loadDummyData);
+        }
+
+        log.info("Completed loading the data into the DB...");
+    }
+
+    private void loadDummyData() {
+        log.info("Executing loadDummyData from {}", Thread.currentThread().getName());
+        final int recordCount = 3468012;
+        final Random random = new Random();
+
+        for (int index = 0; index < recordCount; index++) {
+            String name = getRandomValue(random, NAMES);
+            String surName = getRandomValue(random, SURNAMES);
+            String nickName = getRandomValue(random, NICKNAMES);
+
+            userRepo.save(new User(null, name, surName, nickName));
+        }
+
+        log.info("Competed cycle from {}", Thread.currentThread().getName());
+    }
+
+    private static String getRandomValue(Random random, String[] values) {
+        int index = random.nextInt(values.length);
+        return values[index];
+    }
 }
