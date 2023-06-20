@@ -1,9 +1,8 @@
 package com.shanepaulus.repo;
 
 import com.shanepaulus.domain.User;
-import java.util.Optional;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -14,10 +13,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @CacheConfig(cacheNames = "users")
-public interface UserRepo extends CrudRepository<User, Integer> {
-
-  Optional<User> findById(Integer id);
-
-  <S extends User> S save(S user);
+public interface UserRepo extends JpaRepository<User, Integer> {
 
 }
