@@ -51,7 +51,7 @@ public class DataLoader {
 
     private void loadDummyData() {
         log.info("Executing loadDummyData from {}", Thread.currentThread().getName());
-        final int recordCount = 3468012;
+        final int recordCount = 400000;
         final Random random = new Random();
 
         for (int index = 0; index < recordCount; index++) {
