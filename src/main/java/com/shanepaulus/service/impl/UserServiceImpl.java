@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 /**
@@ -48,7 +47,6 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  @Async
   public void loadUsersIntoCache() {
     log.info("Loading the user list int cache....");
 

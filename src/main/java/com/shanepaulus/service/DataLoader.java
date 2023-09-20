@@ -7,7 +7,9 @@ import java.util.concurrent.ForkJoinPool;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Shane Paulus
@@ -15,8 +17,8 @@ import org.springframework.context.event.EventListener;
  * Date Created : 23-May-2023.
  */
 
-//@Component
-//@Profile("instance-1")
+@Component
+@Profile("instance-1")
 @AllArgsConstructor
 @Slf4j
 public class DataLoader {
