@@ -5,7 +5,8 @@ import com.shanepaulus.mapper.UserMapper;
 import com.shanepaulus.model.UserDto;
 import com.shanepaulus.repo.UserRepo;
 import com.shanepaulus.service.UserService;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -36,8 +37,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public User findById(Integer id) {
-    return userRepo.findById(id)
-        .orElseThrow();
+    return userRepo.findById(id).orElseThrow();
   }
 
   @Override
@@ -50,21 +50,23 @@ public class UserServiceImpl implements UserService {
   public void loadUsersIntoCache() {
     log.info("Loading the user list int cache....");
 
-    int pageSize = 250000;
+    int pageSize = 400000;
     int pageNumber = 0;
     Page<User> usersPage;
     final String key = "users";
     userRedisTemplate.delete(key);
+    final LocalTime currentTime = LocalTime.now();
 
     do {
       PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
       usersPage = userRepo.findAll(pageRequest);
-      log.info("fetched a 250k batch");
+      log.info("fetched a 400k batch");
 
       userRedisTemplate.opsForSet().add(key, usersPage.getContent().toArray(new User[0]));
       pageNumber++;
     } while (usersPage.hasNext());
 
-    log.info("Completed the loadUsersIntoCache method at {}", LocalDateTime.now());
+    log.info("Completed the loadUsersIntoCache method in {}ms",
+        ChronoUnit.MILLIS.between(currentTime, LocalTime.now()));
   }
 }

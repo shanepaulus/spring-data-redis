@@ -2,6 +2,8 @@ package com.shanepaulus.service;
 
 import com.shanepaulus.domain.User;
 import com.shanepaulus.repo.UserRepo;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ForkJoinPool;
 import lombok.AllArgsConstructor;
@@ -57,15 +59,18 @@ public class DataLoader {
     log.info("Executing loadDummyData from {}", Thread.currentThread().getName());
     final int recordCount = 400000;
     final Random random = new Random();
+    final List<User> userList = new ArrayList<>();
 
     for (int index = 0; index < recordCount; index++) {
       String name = getRandomValue(random, NAMES);
       String surName = getRandomValue(random, SURNAMES);
       String nickName = getRandomValue(random, NICKNAMES);
 
-      userRepo.save(new User(null, name, surName, nickName));
+      userList.add(new User(null, name, surName, nickName));
+      //userRepo.save(new User(null, name, surName, nickName));
     }
 
+    userRepo.saveAll(userList);
     log.info("Competed cycle from {}", Thread.currentThread().getName());
   }
 
