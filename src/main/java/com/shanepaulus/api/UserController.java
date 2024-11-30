@@ -1,19 +1,20 @@
 package com.shanepaulus.api;
 
-import com.shanepaulus.mapper.UserDtoMapper;
-import com.shanepaulus.model.UserDto;
-import com.shanepaulus.model.UserRequest;
+import com.shanepaulus.mapper.UserResponseMapper;
+import com.shanepaulus.model.request.UserSaveRequest;
+import com.shanepaulus.model.response.UserResponse;
 import com.shanepaulus.service.UserService;
-import java.util.List;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author Shane Paulus
@@ -23,33 +24,24 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/users")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserController {
+    private final UserService userService;
+    private final UserResponseMapper userResponseMapper;
 
-  private final UserService userService;
+    @GetMapping
+    public List<UserResponse> getAll() {
+        return userResponseMapper.map(userService.findAll());
+    }
 
-  @GetMapping
-  public ResponseEntity<List<UserDto>> getAll() {
-    return new ResponseEntity<>(UserDtoMapper.INSTANCE.fromUserList(userService.findAll()),
-        HttpStatus.OK);
-  }
+    @GetMapping("/{id}")
+    public UserResponse get(@PathVariable("id") Integer id) {
+        return userResponseMapper.map(userService.findById(id));
+    }
 
-  @GetMapping("/{id}")
-  public ResponseEntity<UserDto> get(@PathVariable("id") Integer id) {
-    return new ResponseEntity<>(UserDtoMapper.INSTANCE.mapFromUser(userService.findById(id)),
-        HttpStatus.OK);
-  }
-
-  @PostMapping
-  public ResponseEntity<UserDto> save(@RequestBody UserRequest request) {
-    UserDto userDto = UserDtoMapper.INSTANCE.mapFromRequest(request);
-    userDto = UserDtoMapper.INSTANCE.mapFromUser(userService.save(userDto));
-    return new ResponseEntity<>(userDto, HttpStatus.CREATED);
-  }
-
-//  @PutMapping("/{id}")
-//  public ResponseEntity<UserDto> update(@RequestBody UserRequest request) {
-//    UserDto userDto = UserDtoMapper.INSTANCE.mapFromRequest(request);
-//    user
-//  }
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserResponse save(@RequestBody UserSaveRequest request) {
+        return userResponseMapper.map(userService.save(request));
+    }
 }

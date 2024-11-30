@@ -1,7 +1,8 @@
 package com.shanepaulus.service;
 
 import com.shanepaulus.domain.User;
-import com.shanepaulus.model.UserDto;
+import com.shanepaulus.model.request.UserSaveRequest;
+
 import java.util.List;
 
 /**
@@ -11,13 +12,11 @@ import java.util.List;
  */
 
 public interface UserService {
+    List<User> findAll();
 
-  List<User> findAll();
+    User findById(Integer id);
 
-  User findById(Integer id);
+    User save(UserSaveRequest userDto);
 
-  User save(UserDto userDto);
-
-  void loadUsersIntoCache();
-
+    void loadUsersIntoCache();
 }

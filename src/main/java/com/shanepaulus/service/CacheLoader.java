@@ -12,12 +12,11 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 @Slf4j
 public class CacheLoader {
+    private final UserService userService;
 
-  private final UserService userService;
-
-  @EventListener(ApplicationReadyEvent.class)
-  public void init() {
-    log.info("About to load the data into cache....");
-    userService.loadUsersIntoCache();
-  }
+    @EventListener(ApplicationReadyEvent.class)
+    public void init() {
+        log.info("About to load the data into cache....");
+        userService.loadUsersIntoCache();
+    }
 }

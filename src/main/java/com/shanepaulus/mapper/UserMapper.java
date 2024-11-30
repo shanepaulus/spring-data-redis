@@ -1,9 +1,8 @@
 package com.shanepaulus.mapper;
 
 import com.shanepaulus.domain.User;
-import com.shanepaulus.model.UserDto;
+import com.shanepaulus.model.request.UserSaveRequest;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 
 /**
  * @author Shane Paulus
@@ -11,11 +10,7 @@ import org.mapstruct.factory.Mappers;
  * Date Created : 24-May-2023.
  */
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface UserMapper {
-
-  UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
-
-  User mapFromDto(UserDto userDto);
-
+    User map(UserSaveRequest dto);
 }

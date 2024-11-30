@@ -14,5 +14,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 @CacheConfig(cacheNames = "users")
 public interface UserRepo extends JpaRepository<User, Integer> {
-
 }

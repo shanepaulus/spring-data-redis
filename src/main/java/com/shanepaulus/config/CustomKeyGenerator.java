@@ -1,9 +1,10 @@
 package com.shanepaulus.config;
 
-import java.lang.reflect.Method;
-import java.util.Arrays;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.stereotype.Component;
+
+import java.lang.reflect.Method;
+import java.util.Arrays;
 
 /**
  * @author Shane Paulus
@@ -13,9 +14,8 @@ import org.springframework.stereotype.Component;
 
 @Component("customKeyGenerator")
 public class CustomKeyGenerator implements KeyGenerator {
-
-  @Override
-  public Object generate(Object target, Method method, Object... params) {
-    return method.getName() + ":" + Arrays.hashCode(params);
-  }
+    @Override
+    public Object generate(Object target, Method method, Object... params) {
+        return method.getName() + ":" + Arrays.hashCode(params);
+    }
 }
